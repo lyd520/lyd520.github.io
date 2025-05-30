@@ -3,195 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>记账单应用</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>我的应用门户</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/portal.css">
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <h1>我的记账本</h1>
-            <div class="month-selector">
-                <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
-                <span id="currentMonth"></span>
-                <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
-            </div>
-            <div class="summary">
-                <div class="summary-item">
-                    <span class="label">收入</span>
-                    <span id="totalIncome" class="amount income">¥0.00</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">支出</span>
-                    <span id="totalExpense" class="amount expense">¥0.00</span>
-                </div>
-                <div class="summary-item">
-                    <span class="label">结余</span>
-                    <span id="totalBalance" class="amount">¥0.00</span>
-                </div>
-            </div>
+    <div class="portal-container">
+        <header class="portal-header">
+            <h1>我的应用门户</h1>
+            <p class="subtitle">探索更多精彩功能</p>
         </header>
 
-        <main class="app-content">
-            <div class="transactions-container">
-                <h2>交易记录</h2>
-                <div id="transactionsList" class="transactions-list">
-                    <!-- 交易记录将通过JavaScript动态添加 -->
+        <main class="portal-content">
+            <div class="app-grid">
+                <!-- 记账单应用卡片 -->
+                <a href="accounting.html" class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="app-info">
+                        <h2>记账单应用</h2>
+                        <p>智能记账，轻松管理您的日常收支</p>
+                    </div>
+                    <div class="app-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <!-- 未来可以在这里添加更多应用卡片 -->
+                <div class="app-card coming-soon">
+                    <div class="app-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="app-info">
+                        <h2>敬请期待</h2>
+                        <p>更多精彩应用即将上线</p>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <footer class="app-footer">
-            <div class="footer-buttons">
-                <button id="quickAddBtn" class="quick-add-btn">
-                    <i class="fas fa-bolt"></i>
-                </button>
-                <button id="addTransactionBtn" class="add-btn">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
+        <footer class="portal-footer">
+            <p>&copy; 2024 我的应用门户. All rights reserved.</p>
         </footer>
-
-        <!-- 添加交易的弹窗 -->
-        <div id="addTransactionModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>添加记录</h2>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="transactionForm">
-                        <div class="form-group">
-                            <label for="transactionText">描述</label>
-                            <input type="text" id="transactionText" placeholder="例如：买奶茶" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="transactionAmount">金额</label>
-                            <input type="number" id="transactionAmount" placeholder="0.00" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label>类型</label>
-                            <div class="transaction-type">
-                                <label>
-                                    <input type="radio" name="transactionType" value="expense" checked>
-                                    <span>支出</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="transactionType" value="income">
-                                    <span>收入</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="transactionCategory">类别</label>
-                            <select id="transactionCategory" required>
-                                <option value="" disabled selected>选择类别</option>
-                                <!-- 类别将通过JavaScript动态添加 -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="transactionDate">日期</label>
-                            <input type="date" id="transactionDate" required>
-                        </div>
-                        <button type="submit" class="submit-btn">保存</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- 快速记账弹窗 -->
-        <div id="quickAddModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>快速记账</h2>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="quickAddForm">
-                        <div class="form-group">
-                            <label for="quickAddText">输入记账内容</label>
-                            <input type="text" id="quickAddText" placeholder="例如：今天花了20元买奶茶" required>
-                        </div>
-                        <div class="quick-add-preview">
-                            <div class="preview-header">预览</div>
-                            <div class="preview-content">
-                                <div class="preview-item">
-                                    <span class="preview-label">类型:</span>
-                                    <span id="previewType" class="preview-value">支出</span>
-                                </div>
-                                <div class="preview-item">
-                                    <span class="preview-label">金额:</span>
-                                    <span id="previewAmount" class="preview-value">¥0.00</span>
-                                </div>
-                                <div class="preview-item">
-                                    <span class="preview-label">类别:</span>
-                                    <span id="previewCategory" class="preview-value">未识别</span>
-                                </div>
-                                <div class="preview-item">
-                                    <span class="preview-label">描述:</span>
-                                    <span id="previewDescription" class="preview-value"></span>
-                                </div>
-                                <div class="preview-item">
-                                    <span class="preview-label">日期:</span>
-                                    <span id="previewDate" class="preview-value"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="submit-btn">保存</button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <!-- 编辑交易的弹窗 -->
-    <div id="editTransactionModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>编辑记录</h2>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="editTransactionForm">
-                    <input type="hidden" id="editTransactionId">
-                    <div class="form-group">
-                        <label for="editTransactionText">描述</label>
-                        <input type="text" id="editTransactionText" placeholder="例如：买奶茶" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editTransactionAmount">金额</label>
-                        <input type="number" id="editTransactionAmount" placeholder="0.00" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>类型</label>
-                        <div class="transaction-type">
-                            <label>
-                                <input type="radio" name="editTransactionType" value="expense" checked>
-                                <span>支出</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="editTransactionType" value="income">
-                                <span>收入</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="editTransactionCategory">类别</label>
-                        <select id="editTransactionCategory" required>
-                            <option value="" disabled selected>选择类别</option>
-                            <!-- 类别将通过JavaScript动态添加 -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editTransactionDate">日期</label>
-                        <input type="date" id="editTransactionDate" required>
-                    </div>
-                    <button type="submit" class="submit-btn">保存修改</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/app.js"></script>
 </body>
-</html>
+</html> 

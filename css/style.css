@@ -933,3 +933,74 @@ body::after {
     animation: dataLoad 1s ease-out forwards;
     opacity: 0.5;
 }
+
+/* 交易记录头部 */
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
+
+.transactions-header h2 {
+    margin: 0;
+}
+
+/* 搜索容器 */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(16, 42, 67, 0.5);
+    border: 1px solid rgba(0, 198, 255, 0.2);
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.3);
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    width: 100%;
+    padding: 8px 0;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.clear-search {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.clear-search:hover {
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .transactions-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+}

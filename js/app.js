@@ -18,6 +18,10 @@ const categories = {
     ]
 };
 
+// 搜索相关变量
+let searchTimeout;
+let currentSearchTerm = '';
+
 // 初始化应用
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化日期选择器为今天
@@ -126,6 +130,32 @@ function setupEventListeners() {
     
     document.getElementById('nextMonth').addEventListener('click', function() {
         changeMonth(1);
+    });
+
+    // 搜索输入框
+    const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.trim().toLowerCase();
+        currentSearchTerm = searchTerm;
+        
+        // 清除之前的定时器
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        
+        // 设置新的定时器，延迟300ms执行搜索
+        searchTimeout = setTimeout(() => {
+            loadTransactions();
+        }, 300);
+    });
+    
+    // 清除搜索
+    clearSearchBtn.addEventListener('click', function() {
+        document.getElementById('searchInput').value = '';
+        currentSearchTerm = '';
+        loadTransactions();
     });
 }
 
@@ -286,20 +316,35 @@ function saveTransaction(transaction) {
 function loadTransactions() {
     const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
     const currentDate = getCurrentMonthDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
     
-    // 筛选当前月份的交易
-    const monthTransactions = transactions.filter(transaction => {
-        const transDate = new Date(transaction.date);
-        return transDate.getMonth() === currentMonth && transDate.getFullYear() === currentYear;
+    // 过滤当月交易
+    let filteredTransactions = transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        return transactionDate.getFullYear() === currentDate.getFullYear() &&
+               transactionDate.getMonth() === currentDate.getMonth();
     });
     
-    // 更新摘要信息
-    updateSummary(monthTransactions);
+    // 如果有搜索词，进一步过滤
+    if (currentSearchTerm) {
+        filteredTransactions = filteredTransactions.filter(transaction => {
+            const searchableText = [
+                transaction.text.toLowerCase(),
+                transaction.type.toLowerCase(),
+                getCategoryInfo(transaction.category, transaction.type).name.toLowerCase(),
+                transaction.date,
+                transaction.amount.toString()
+            ].join(' ');
+            
+            return searchableText.includes(currentSearchTerm);
+        });
+    }
     
-    // 渲染交易列表
-    renderTransactionsList(monthTransactions);
+    // 按日期降序排序
+    filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // 更新界面
+    updateSummary(filteredTransactions);
+    renderTransactionsList(filteredTransactions);
 }
 
 // 更新摘要信息
@@ -343,9 +388,6 @@ function renderTransactionsList(transactions) {
         `;
         return;
     }
-    
-    // 按日期降序排序
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     transactions.forEach(transaction => {
         const categoryInfo = getCategoryInfo(transaction.category, transaction.type);
